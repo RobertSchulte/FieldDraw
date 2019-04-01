@@ -17,6 +17,8 @@ int maxAgents;
 int dimension;
 
 float minSpeed, maxSpeed;
+float minStroke, maxStroke;
+float minWait, maxWait;
 float minThick, maxThick;
 
 int minAlpha, maxAlpha;
@@ -64,6 +66,11 @@ void setup()
   minThick = 1;
   maxThick = 32;
   
+  minStroke = 50; 
+  maxStroke = 3000;
+  minWait = 50;
+  maxWait = 3000;
+  
   minAlpha = 1;
   maxAlpha = 255;
   friction = .01;
@@ -95,7 +102,7 @@ void initAgents()
   
   for(int f = 0; f < maxAgents; f++)
   {
-    drawAgents[f] = new Agents( new PVector(random(canvasWD), random(canvasHT)), minSpeed, maxSpeed, minThick, maxThick, minAlpha, maxAlpha);
+    drawAgents[f] = new Agents( new PVector(random(canvasWD), random(canvasHT)) );
   }
 }
 
@@ -190,6 +197,12 @@ void keyPressed() {
     screenBuffer.updatePixels();
   }
   
+  if(key  == 's') {
+    sequence++;
+    String filename = "Flow-" + session + "-" + pad(str(sequence), 3) + ".png";
+    drawBuffer.save(filename);
+   }
+  
   if (key  == 'm')  
   {
     if(controlP5.isVisible())
@@ -241,9 +254,16 @@ void draw() {
     {
       drawAgents[f].goWithTheFlow();
       
-      if(drawAgents[f].isDrawing)
+      if(drawMode)
       {
-        drawAgents[f].drawUpdate(drawBuffer);
+        drawAgents[f].drawPos(drawBuffer);
+      }
+      else
+      {
+        if(drawAgents[f].isDrawing)
+        {
+          drawAgents[f].drawUpdate(drawBuffer);
+        }
       }
     }
     

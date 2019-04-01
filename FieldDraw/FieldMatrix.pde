@@ -20,7 +20,6 @@ class FieldMatrix {
     field = new PVector[col][row];
     
     makeField();
-    
   }
   
   void makeField(){

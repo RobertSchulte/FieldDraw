@@ -5,28 +5,27 @@ class Agents {
   PVector dir;
   PVector lastdir;
   float speed;
-  float thickness, lastThickness, maxWidth, strokeTime;
+  float thickness, lastThickness, maxWidth, strokeTime, waitTime;
   float alp;
   float startTime, duration;
   boolean isDrawing = false; 
   PVector grav;
-  
-  Agents(PVector _pos, float minSpeed, float maxSpeed, float minThick, float maxThick, int minAlpha, int maxAlpha)
+  ArrayList<PVector> vertLst;
+   
+  Agents(PVector _pos)
   {
     pos = _pos;
+    alp = 1;
     
     lastpos = new PVector();
     lastdir = new PVector();
+    
+    vertLst = new ArrayList();
 
     dir = PVector.random2D();
    // dir = fm.getValByRowCol(pos); very odd agent behavior
-    
-    speed = random(minSpeed, maxSpeed);
-    maxWidth = random(minThick, maxThick);
 
     grav = new PVector();
-    
-    alp = random(minAlpha, maxAlpha);
   }
   
   void goWithTheFlow()
@@ -46,11 +45,15 @@ class Agents {
     dir.setMag(speed);
 
     pos.add(dir);
-    
-    wrapAround();
-    
-    if(!isDrawing)
+
+    if(isDrawing)
     {
+      endOnOut();
+    } 
+    else 
+    {
+      wrapAround();
+      
       if(checkTime())
       {
         newStroke();
@@ -71,7 +74,30 @@ class Agents {
     lastdir.x = dir.x;
     lastdir.y = dir.y;
     
-    duration = Math.round(random(2000)) + 500;
+    vertLst.clear();
+    
+    alp = random(minAlpha, maxAlpha);
+    speed = random(minSpeed, maxSpeed);
+    maxWidth = random(minThick, maxThick);
+    strokeTime = random(minStroke, maxStroke);
+    
+    duration = strokeTime + 500;
+  }
+  
+  void endStroke()
+  {
+    //drwLst();
+
+    isDrawing = false;
+    startTime = millis();
+    
+    waitTime = random(minWait, maxWait);
+    duration = waitTime + 500;
+
+    if(isPause)
+    {
+      duration = 60000;
+    }
   }
   
   boolean checkTime() 
@@ -88,9 +114,19 @@ class Agents {
   
     return timesUp;
   }
+  
+  void drawPos(PGraphics db)
+  {
+    db.noStroke();
+    db.fill(255, 255);
+    db.strokeWeight(1);
+
+    db.square(pos.x, pos.y, 8);
+  }
 
   void drawUpdate(PGraphics db)
   {
+
     float elapsed = (millis() - startTime);
     
     if(elapsed < 250)
@@ -98,11 +134,8 @@ class Agents {
       thickness = easeOutQuad(elapsed, 1, maxWidth, 250);
     }
     
-    if(elapsed > duration - 250)
-    {
-      thickness = easeInQuad(elapsed - (duration - 250) , maxWidth,  -(maxWidth - 1), 250);
-    }
-    
+
+
     PVector p1, p2, p3, p4;
     PVector r1, r2;
     
@@ -134,21 +167,55 @@ class Agents {
     db.endShape(CLOSE);
     
     lastThickness = thickness;
+
+    vertLst.add(new PVector(pos.x, pos.y));
+    
+    if(elapsed > duration - 250)
+    {
+      thickness = easeInQuad(elapsed - (duration - 250) , maxWidth,  -(maxWidth - 1), 250);
+    }
     
     if(checkTime())
     {
-      isDrawing = false;
-      startTime = millis();
-      duration = Math.round(random(2000)) + 500;
-      
-      if(isPause)
-      {
-        duration = 60000;
-      }
+      endStroke();
     }
 
     //db.line(lastpos.x, lastpos.y, pos.x, pos.y);
-  } 
+  }
+  
+  void drwLst()
+  {
+    if(vertLst.size() == 0)
+    {
+      return;
+    }
+    
+    lastpos = vertLst.get(0);
+
+    drawBuffer.stroke(fgClr, alp);
+    drawBuffer.strokeWeight(1.5);
+    
+    //drawBuffer.beginShape();
+    
+    for (int i = 0; i < vertLst.size(); i++) 
+    {
+     // println(vertLst.get(i).x, vertLst.get(i).y);
+      //drawBuffer.vertex(vertLst.get(i).x, vertLst.get(i).y);
+      drawBuffer.line(lastpos.x, lastpos.y, vertLst.get(i).x, vertLst.get(i).y);
+      lastpos = vertLst.get(i);
+    }
+    
+    //drawBuffer.endShape(CLOSE);
+
+  }
+  
+  void endOnOut()
+  {
+    if (pos.x < 0 - thickness || pos.y < 0 - thickness || pos.x > canvasWD + thickness || pos.y > canvasHT + thickness)
+    {
+      endStroke();
+    }
+  }
 
   // Wrap around
   void wrapAround() {

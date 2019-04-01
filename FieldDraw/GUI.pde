@@ -76,10 +76,12 @@ void initGUI()
     .setSize(btW, btH);
     
   controlP5.addRange("AlphaRange")
+    .setBroadcast(false)
     .setRange(minAlpha, maxAlpha)
     .setRangeValues(minAlpha, maxAlpha)
     .setPosition(col, 80)
-    .setSize(btW, btH);
+    .setSize(btW, btH)
+    .setBroadcast(true);
        
    controlP5.addButton("INIT AGENTS")
     .setValue(1)
@@ -128,6 +130,22 @@ void initGUI()
     .setValue(.5)
     .setPosition(col, 60)
     .setSize(btW, btH);
+    
+  controlP5.addRange("StrokeLength")
+    .setBroadcast(false)
+    .setRange(minStroke, maxStroke)
+    .setRangeValues(minStroke, maxStroke)
+    .setPosition(col, 80)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+    
+  controlP5.addRange("GapLength")
+    .setBroadcast(false)
+    .setRange(minWait, maxWait)
+    .setRangeValues(minWait, maxWait)
+    .setPosition(col, 100)
+    .setSize(btW, btH)
+    .setBroadcast(true);
     
     controlP5.addButton("Pause")
     .setPosition(850, 20)
@@ -187,6 +205,17 @@ void controlEvent(ControlEvent event)
       maxAlpha = int(event.getController().getArrayValue(1));
     }
     
+    if(event.isFrom("StrokeLength")) {
+      minStroke = int(event.getController().getArrayValue(0));
+      maxStroke = int(event.getController().getArrayValue(1));
+    }
+    
+    if(event.isFrom("GapLength")) {
+      minWait = int(event.getController().getArrayValue(0));
+      maxWait = int(event.getController().getArrayValue(1));
+    }
+    
+    
     if(event.getController().getName()=="UPDATE") 
     {
       setUpCanvas();
@@ -219,12 +248,13 @@ void controlEvent(ControlEvent event)
     if(event.getController().getName()=="SHOW AGENTS") 
     {
       showAgents = !showAgents;
+      allNewStroke();
     }
     
     if(event.getController().getName()=="DRAW MODE") 
     {
       drawMode = !drawMode;
-      
+      allNewStroke();
       drawBuffer.beginDraw();
       drawBuffer.background(bgClr);
       drawBuffer.endDraw();

@@ -11,7 +11,7 @@ void initGUI()
     .snapToTickMarks(true)
     .showTickMarks(false)
     .setSize(btW, btH);
-  
+
   controlP5.addSlider("printHeight")
     .setRange(0.5, 20)
     .setValue(printHeight)
@@ -20,7 +20,7 @@ void initGUI()
     .snapToTickMarks(true)
     .showTickMarks(false)
     .setSize(btW, btH);
-    
+
   controlP5.addSlider("dpi")
     .setRange(10, 400)
     .setNumberOfTickMarks(40)
@@ -29,229 +29,228 @@ void initGUI()
     .setValue(dpi)
     .setPosition(col, 60)
     .setSize(btW, btH);
-    
+
   controlP5.addSlider("matrixColumns")
     .setRange(4, 32)
     .setValue(matrixColumns)
     .setPosition(col, 90)
     .setSize(btW, btH);
 
-   controlP5.addButton("UPDATE")
+  controlP5.addButton("UPDATE")
     .setBroadcast(false)
     .setValue(0)
     .setPosition(col, 110)
     .setSize(btW, btH * 2)
     .setBroadcast(true);
-  
-    col = 220;
-    
-   controlP5.addButton("SMOOTH MATRIX")
+
+  controlP5.addButton("Save")
+    .setPosition(col, 145)
+    .setSize(btW, btH * 2);
+
+  col = 210;
+
+  controlP5.addButton("SMOOTH MATRIX")
     .setValue(1)
     .setPosition(col, 20)
-    .setSize(btW, btH * 2);
-    
-   controlP5.addButton("RANDOM MATRIX")
+    .setSize(btW, btH);
+
+  controlP5.addButton("RANDOM MATRIX")
     .setValue(1)
-    .setPosition(col, 58)
-    .setSize(btW, btH * 2);
-    
-    col = 370;
-   
+    .setPosition(col, 40)
+    .setSize(btW, btH);
+
+  controlP5.addSlider("gravForce")
+    .setRange(0.1, 2)
+    .setValue(gravForce)
+    .setPosition(col, 60)
+    .setSize(btW, btH);
+
+  controlP5.addSlider("Direction")
+    .setRange(0, PI)
+    .setValue(0)
+    .setPosition(col, 80)
+    .setSize(btW, btH);
+
+  controlP5.addSlider("friction")
+    .setRange(0.1, 2)
+    .setValue(.5)
+    .setPosition(col, 100)
+    .setSize(btW, btH); 
+
+  col = 400;
+
   controlP5.addSlider("maxAgents")
     .setRange(1, 512)
     .setValue(maxAgents)
     .setPosition(col, 20)
     .setSize(btW, btH);
-    
+
+  controlP5.addButton("INIT AGENTS")
+    .setValue(1)
+    .setPosition(col, 40)
+    .setSize(btW, btH);
+
   controlP5.addRange("Speed")
     .setRange(minSpeed, maxSpeed)
     .setRangeValues(minSpeed, maxSpeed)
-    .setPosition(col, 40)
+    .setPosition(col, 60)
     .setSize(btW, btH);
-    
+
   controlP5.addRange("Thickness")
     .setRange(minThick, maxThick)
     .setRangeValues(minThick, maxThick)
-    .setPosition(col, 60)
+    .setPosition(col, 80)
     .setSize(btW, btH);
-    
+
   controlP5.addRange("AlphaRange")
     .setBroadcast(false)
     .setRange(minAlpha, maxAlpha)
     .setRangeValues(minAlpha, maxAlpha)
-    .setPosition(col, 80)
+    .setPosition(col, 100)
     .setSize(btW, btH)
     .setBroadcast(true);
-       
-   controlP5.addButton("INIT AGENTS")
-    .setValue(1)
-    .setPosition(col, 100)
-    .setSize(btW, btH * 2);
-    
-    col = 570;
 
-   controlP5.addToggle("SHOW AGENTS")
-    .setValue(0)
-    .setPosition(col, 20)
-    .setSize(btW / 2, btH);
-   
-   controlP5.addToggle("DRAW MODE")
-    .setValue(0)
-    .setPosition(col, 50)
-    .setSize(btW / 2, btH);
-    
-   controlP5.addToggle("INVERT")
-    .setBroadcast(false)
-    .setValue(0)
-    .setPosition(col, 80)
-    .setSize(btW / 2, btH)
-    .setBroadcast(true);
-    
-   controlP5.addButton("CLEAR")
-    .setPosition(col, 110)
-    .setSize(btW / 2, btH);
-   
-    col = 650;
-
-    controlP5.addSlider("gravForce")
-    .setRange(0.1, 2)
-    .setValue(gravForce)
-    .setPosition(col, 20)
-    .setSize(btW, btH);
-    
-    controlP5.addSlider("Direction")
-    .setRange(0, PI)
-    .setValue(0)
-    .setPosition(col, 40)
-    .setSize(btW, btH);
-       
-    controlP5.addSlider("friction")
-    .setRange(0.1, 2)
-    .setValue(.5)
-    .setPosition(col, 60)
-    .setSize(btW, btH);
-    
   controlP5.addRange("StrokeLength")
     .setBroadcast(false)
     .setRange(minStroke, maxStroke)
     .setRangeValues(minStroke, maxStroke)
-    .setPosition(col, 80)
+    .setPosition(col, 120)
     .setSize(btW, btH)
     .setBroadcast(true);
-    
+
   controlP5.addRange("GapLength")
     .setBroadcast(false)
     .setRange(minWait, maxWait)
     .setRangeValues(minWait, maxWait)
-    .setPosition(col, 100)
+    .setPosition(col, 140)
     .setSize(btW, btH)
     .setBroadcast(true);
-    
-    controlP5.addButton("Pause")
-    .setPosition(850, 20)
-    .setSize(btW, btH * 2);
-    
-    controlP5.addButton("Save")
-    .setPosition(850, 60)
-    .setSize(btW, btH * 3);
+
+  col = 600;
+
+  controlP5.addButton("SHOW AGENTS")
+    .setValue(0)
+    .setPosition(col, 20)
+    .setSize(btW / 2, btH);
+
+  controlP5.addButton("DRAW MODE")
+    .setValue(0)
+    .setPosition(col, 40)
+    .setSize(btW / 2, btH);
+
+  controlP5.addButton("INVERT")
+    .setBroadcast(false)
+    .setValue(0)
+    .setPosition(col, 60)
+    .setSize(btW / 2, btH)
+    .setBroadcast(true);
+
+  controlP5.addButton("CLEAR")
+    .setPosition(col, 80)
+    .setSize(btW / 2, btH);
+
+  controlP5.addButton("Pause")
+    .setPosition(col, 100)
+    .setSize(btW / 2, btH * 2);
 }
 
 void controlEvent(ControlEvent event) 
 {
-  if(event.isController()) 
+  if (event.isController()) 
   {
-    if(event.getController().getName()=="Save") {
-      sequence++;
-      String filename = "Flow-" + session + "-" + pad(str(sequence), 3) + ".png";
-      drawBuffer.save(filename);
-     }
-     
-    if(event.getController().getName()=="CLEAR") 
+    if (event.getController().getName()=="Save")
+    {
+      saveImage();
+    }
+
+    if (event.getController().getName()=="CLEAR") 
     {
       drawBuffer.beginDraw();
       drawBuffer.background(bgClr);
       drawBuffer.endDraw();
-      
+
       allNewStroke();
     }
-    
-    if(event.getController().getName()=="Pause") 
+
+    if (event.getController().getName()=="Pause") 
     {
       isPause = !isPause;
-      
-      if(!isPause)
+
+      if (!isPause)
       {
         allNewStroke();
       }
     }
-    
-    if(event.isFrom("Direction")) {
+
+    if (event.isFrom("Direction"))
+    {
       float angle = event.getValue();
       gravDir = PVector.fromAngle(angle);
     }
-    
-    if(event.isFrom("Speed")) {
+
+    if (event.isFrom("Speed"))
+    {
       minSpeed = int(event.getController().getArrayValue(0));
       maxSpeed = int(event.getController().getArrayValue(1));
     }
-    
-    if(event.isFrom("Thickness")) {
+
+    if (event.isFrom("Thickness"))
+    {
       minThick = int(event.getController().getArrayValue(0));
       maxThick = int(event.getController().getArrayValue(1));
     }
-    
-    if(event.isFrom("AlphaRange")) {
+
+    if (event.isFrom("AlphaRange"))
+    {
       minAlpha = int(event.getController().getArrayValue(0));
       maxAlpha = int(event.getController().getArrayValue(1));
     }
-    
-    if(event.isFrom("StrokeLength")) {
+
+    if (event.isFrom("StrokeLength"))
+    {
       minStroke = int(event.getController().getArrayValue(0));
       maxStroke = int(event.getController().getArrayValue(1));
     }
-    
-    if(event.isFrom("GapLength")) {
+
+    if (event.isFrom("GapLength"))
+    {
       minWait = int(event.getController().getArrayValue(0));
       maxWait = int(event.getController().getArrayValue(1));
     }
-    
-    
-    if(event.getController().getName()=="UPDATE") 
+
+    if (event.getController().getName()=="UPDATE") 
     {
       setUpCanvas();
-      
       initFieldMatrix();
     }
-    
-    if(event.getController().getName()=="RANDOM MATRIX") 
+
+    if (event.getController().getName()=="RANDOM MATRIX") 
     {
       fm.makeField();
-      
       //fm.makeSmoothField();
-      
       fm.drawField(fieldBuffer);
     }
-    
-    if(event.getController().getName()=="SMOOTH MATRIX") 
+
+    if (event.getController().getName()=="SMOOTH MATRIX") 
     {
       //fm.smoothField();
       fm.makeSmoothField();
       fm.drawField(fieldBuffer);
     }
-    
-    if(event.getController().getName()=="INIT AGENTS") 
+
+    if (event.getController().getName()=="INIT AGENTS") 
     {
       initAgents();
       fm.drawField(fieldBuffer);
     }
-    
-    if(event.getController().getName()=="SHOW AGENTS") 
+
+    if (event.getController().getName()=="SHOW AGENTS") 
     {
       showAgents = !showAgents;
       allNewStroke();
     }
-    
-    if(event.getController().getName()=="DRAW MODE") 
+
+    if (event.getController().getName()=="DRAW MODE") 
     {
       drawMode = !drawMode;
       allNewStroke();
@@ -259,15 +258,14 @@ void controlEvent(ControlEvent event)
       drawBuffer.background(bgClr);
       drawBuffer.endDraw();
     }
-    
-    if(event.getController().getName()=="INVERT") 
+
+    if (event.getController().getName()=="INVERT") 
     {
       int tempClr = bgClr;
       bgClr = fgClr;
       fgClr = tempClr;
-      
+
       allNewStroke();
     }
-
   }
 }

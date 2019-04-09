@@ -121,7 +121,7 @@ class Agents {
     db.fill(255, 255);
     db.strokeWeight(1);
 
-    db.square(pos.x, pos.y, 8);
+    db.square(pos.x * scale , pos.y * scale, 8);
   }
 
   void drawUpdate(PGraphics db)

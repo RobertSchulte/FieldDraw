@@ -80,10 +80,14 @@ class FieldMatrix {
   void drawField(PGraphics fb)
   {
     fb.beginDraw();
+    fb.background(0, 0);
     
     fb.noStroke();
-    fb.fill(0);
+    fb.fill(0, 128);
     fb.rect(0, 0, wd, ht);
+    
+    fb.noFill();
+    fb.stroke(255, 128);
 
     for (int posX = 0; posX < col; posX++)
     {
@@ -93,7 +97,7 @@ class FieldMatrix {
         fb.translate(posX * blockSize + offset, posY * blockSize + offset);
         fb.rotate(field[posX][posY].heading());
         
-        fb.stroke(255, 128);
+        //fb.stroke(255, 128);
     
         fb.ellipse(0, 0, blockSize, blockSize);
         fb.line(0, 0, offset, 0);

@@ -3,9 +3,12 @@ class FieldMatrix {
   int row, col, offset;
   PGraphics fieldBuffer;
   int wd, ht, blockSize;
+  boolean visible;
   
   FieldMatrix(int _wd, int _ht, int _col) 
   {
+    visible = true;
+    
     wd = _wd;
     ht = _ht;
 
@@ -87,7 +90,7 @@ class FieldMatrix {
     fb.rect(0, 0, wd, ht);
     
     fb.noFill();
-    fb.stroke(255, 128);
+    fb.stroke(255, 192);
 
     for (int posX = 0; posX < col; posX++)
     {

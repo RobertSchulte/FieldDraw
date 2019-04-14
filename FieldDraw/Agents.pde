@@ -118,10 +118,17 @@ class Agents {
   void drawPos(PGraphics db)
   {
     db.noStroke();
-    db.fill(255, 255);
-    db.strokeWeight(1);
 
-    db.square(pos.x * scale , pos.y * scale, 8);
+    if(isDrawing)
+    {
+      db.fill(#ffff88);
+      db.ellipse(pos.x * scale , pos.y * scale, 8, 8);
+    }
+    else
+    {
+      db.fill(255);
+      db.ellipse(pos.x * scale , pos.y * scale, 4, 4);
+    }
   }
 
   void drawUpdate(PGraphics db)

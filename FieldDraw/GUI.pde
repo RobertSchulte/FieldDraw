@@ -160,14 +160,16 @@ void controlEvent(ControlEvent event)
 
     if (event.getController().getName()=="CLEAR") 
     {
+      stopAllStrokes();
+      
       drawBuffer.beginDraw();
       drawBuffer.background(bgClr);
       drawBuffer.endDraw();
       
-      if(!showAgents)
-      {
-        allNewStroke();
-      }
+      //if(!showAgents)
+      //{
+        //allNewStroke();
+     // }
     }
 
     if (event.getController().getName()=="Pause") 
@@ -244,7 +246,7 @@ void controlEvent(ControlEvent event)
     if (event.getController().getName()=="INIT AGENTS") 
     {
       initAgents();
-      fm.drawField(fieldBuffer);
+      //fm.drawField(fieldBuffer);
     }
 
     if (event.getController().getName()=="SHOW AGENTS") 

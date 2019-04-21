@@ -10,7 +10,8 @@ class Agents {
   float startTime, duration;
   boolean isDrawing = false; 
   PVector grav;
-  ArrayList<PVector> vertLst;
+  ArrayList<PVector> vertLst1;
+  ArrayList<PVector> vertLst2;
    
   Agents(PVector _pos)
   {
@@ -20,10 +21,12 @@ class Agents {
     lastpos = new PVector();
     lastdir = new PVector();
     
-    vertLst = new ArrayList();
+    vertLst1 = new ArrayList();
+    vertLst2 = new ArrayList();
 
     dir = PVector.random2D();
    // dir = fm.getValByRowCol(pos); very odd agent behavior
+   
 
     grav = new PVector();
   }
@@ -74,7 +77,8 @@ class Agents {
     lastdir.x = dir.x;
     lastdir.y = dir.y;
     
-    vertLst.clear();
+    vertLst1.clear();
+    vertLst2.clear();
     
     alp = random(minAlpha, maxAlpha);
     speed = random(minSpeed, maxSpeed);
@@ -86,7 +90,7 @@ class Agents {
   
   void endStroke()
   {
-    //drwLst();
+    drwLst();
 
     isDrawing = false;
     startTime = millis();
@@ -96,6 +100,7 @@ class Agents {
 
     if(isPause)
     {
+      // pause drawing for 1 min
       duration = 60000;
     }
   }
@@ -140,8 +145,6 @@ class Agents {
     {
       thickness = easeOutQuad(elapsed, 1, maxWidth, 250);
     }
-    
-
 
     PVector p1, p2, p3, p4;
     PVector r1, r2;
@@ -160,7 +163,7 @@ class Agents {
     
     r1.rotate(PI);
     p4 = PVector.add(pos, r1.setMag(thickness));
-    
+    /*
     db.stroke(fgClr, alp);
     db.strokeWeight(1.5);
     db.fill(fgClr, alp);
@@ -172,10 +175,11 @@ class Agents {
     db.vertex(p3.x, p3.y);
     db.vertex(p4.x, p4.y);
     db.endShape(CLOSE);
-    
+    */
     lastThickness = thickness;
 
-    vertLst.add(new PVector(pos.x, pos.y));
+    vertLst1.add(p1);
+    vertLst2.add(p4);
     
     if(elapsed > duration - 250)
     {
@@ -192,27 +196,27 @@ class Agents {
   
   void drwLst()
   {
-    if(vertLst.size() == 0)
+    if(vertLst1.size() == 0)
     {
       return;
     }
-    
-    lastpos = vertLst.get(0);
 
-    drawBuffer.stroke(fgClr, alp);
-    drawBuffer.strokeWeight(1.5);
+    drawBuffer.fill(fgClr, alp);
+    drawBuffer.noStroke();
     
-    //drawBuffer.beginShape();
+    drawBuffer.beginShape();
     
-    for (int i = 0; i < vertLst.size(); i++) 
+    for (int i = 0; i < vertLst1.size(); i++) 
     {
-     // println(vertLst.get(i).x, vertLst.get(i).y);
-      //drawBuffer.vertex(vertLst.get(i).x, vertLst.get(i).y);
-      drawBuffer.line(lastpos.x, lastpos.y, vertLst.get(i).x, vertLst.get(i).y);
-      lastpos = vertLst.get(i);
+      drawBuffer.vertex(vertLst1.get(i).x, vertLst1.get(i).y);
     }
     
-    //drawBuffer.endShape(CLOSE);
+    for (int i = vertLst2.size() - 1; i > 0; i--) 
+    {
+      drawBuffer.vertex(vertLst2.get(i).x, vertLst2.get(i).y);
+    }
+    
+    drawBuffer.endShape(CLOSE);
 
   }
   

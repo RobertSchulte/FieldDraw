@@ -115,6 +115,14 @@ void allNewStroke()
   }
 }
 
+void stopAllStrokes()
+{
+  for (int f = 0; f < maxAgents; f++)
+  {
+    drawAgents[f].isDrawing = false;
+  }
+}
+
 //  Set up the canvas - full print resolution
 void setUpCanvas()
 {

@@ -115,6 +115,14 @@ void allNewStroke()
   }
 }
 
+void stopAllStrokes()
+{
+  for (int f = 0; f < maxAgents; f++)
+  {
+    drawAgents[f].isDrawing = false;
+  }
+}
+
 //  Set up the canvas - full print resolution
 void setUpCanvas()
 {
@@ -238,49 +246,39 @@ void draw() {
 
   rect(offX, offY, imageWD, imageHT);
 
+  drawBuffer.beginDraw();
+  agentBuffer.beginDraw();
+
   if (showAgents)
   {
-    drawBuffer.beginDraw();
-    agentBuffer.beginDraw();
-
-    if (drawMode)
-    {
-      //  background is transparent to show matrix
-      drawBuffer.background(bgClr, 0);
-      agentBuffer.background(0, 0);
-    }
-
-    for (int f = 0; f < drawAgents.length; f++)
-    {
-      drawAgents[f].goWithTheFlow();
-
-      if (drawMode)
-      {
-        drawAgents[f].drawPos(agentBuffer);
-      } 
-      else
-      {
-        if (drawAgents[f].isDrawing)
-        {
-          drawAgents[f].drawUpdate(drawBuffer);
-        }
-      }
-    }
-    
-    agentBuffer.endDraw();
-    drawBuffer.endDraw();
-    
-    if (drawMode)
-    {
-      image(screenBuffer, offX, offY);
-      image(fieldBuffer, offX, offY);
-      image(agentBuffer, offX, offY);
-    }
-    else
-    {
-      updateScreenBuffer();
-      image(screenBuffer, offX, offY);
-    }
-
+    agentBuffer.background(0, 0);
   }
+
+  for (int f = 0; f < drawAgents.length; f++)
+  {
+    drawAgents[f].goWithTheFlow();
+
+    if (showAgents)
+    {
+      drawAgents[f].drawPos(agentBuffer);
+    } 
+
+    if (drawAgents[f].isDrawing)
+    {
+      drawAgents[f].drawUpdate(drawBuffer);
+    }
+  }
+    
+  agentBuffer.endDraw();
+  drawBuffer.endDraw();
+    
+  updateScreenBuffer();
+  image(screenBuffer, offX, offY);
+    
+  if (showAgents)
+  {
+    image(fieldBuffer, offX, offY);
+    image(agentBuffer, offX, offY);
+  }
+
 }

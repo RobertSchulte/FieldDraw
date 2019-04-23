@@ -131,12 +131,7 @@ void initGUI()
   controlP5.addButton("SHOW AGENTS")
     .setValue(0)
     .setPosition(col, 20)
-    .setSize(btW / 2, btH);
-
-  controlP5.addButton("DRAW MODE")
-    .setValue(0)
-    .setPosition(col, 40)
-    .setSize(btW / 2, btH);
+    .setSize(btW / 2, btH * 2);
 
   controlP5.addButton("INVERT")
     .setBroadcast(false)
@@ -165,11 +160,16 @@ void controlEvent(ControlEvent event)
 
     if (event.getController().getName()=="CLEAR") 
     {
+      stopAllStrokes();
+      
       drawBuffer.beginDraw();
       drawBuffer.background(bgClr);
       drawBuffer.endDraw();
-
-      allNewStroke();
+      
+      //if(!showAgents)
+      //{
+        //allNewStroke();
+     // }
     }
 
     if (event.getController().getName()=="Pause") 
@@ -178,7 +178,12 @@ void controlEvent(ControlEvent event)
 
       if (!isPause)
       {
+        event.getController().setLabel("Pause");
         allNewStroke();
+      }
+      else
+      {
+        event.getController().setLabel("Run");
       }
     }
 
@@ -241,22 +246,22 @@ void controlEvent(ControlEvent event)
     if (event.getController().getName()=="INIT AGENTS") 
     {
       initAgents();
-      fm.drawField(fieldBuffer);
+      //fm.drawField(fieldBuffer);
     }
 
     if (event.getController().getName()=="SHOW AGENTS") 
     {
       showAgents = !showAgents;
-      allNewStroke();
-    }
-
-    if (event.getController().getName()=="DRAW MODE") 
-    {
-      drawMode = !drawMode;
-      allNewStroke();
-      drawBuffer.beginDraw();
-      drawBuffer.background(bgClr);
-      drawBuffer.endDraw();
+      
+      if(showAgents)
+      {
+        event.getController().setLabel("HIDE AGENTS");
+      }
+      else
+      {
+        event.getController().setLabel("SHOW AGENTS");
+      }
+      //allNewStroke();
     }
 
     if (event.getController().getName()=="INVERT") 

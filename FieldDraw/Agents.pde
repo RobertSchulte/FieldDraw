@@ -1,5 +1,6 @@
 //  The Drawing Agent class
 class Agents {
+  int PID;
   PVector pos;
   PVector lastpos;
   PVector dir;
@@ -13,8 +14,9 @@ class Agents {
   ArrayList<PVector> vertLst1;
   ArrayList<PVector> vertLst2;
    
-  Agents(PVector _pos)
+  Agents(int _pid, PVector _pos)
   {
+    PID = _pid;
     pos = _pos;
     alp = 1;
     
@@ -80,10 +82,10 @@ class Agents {
     vertLst1.clear();
     vertLst2.clear();
     
-    alp = random(minAlpha, maxAlpha);
-    speed = random(minSpeed, maxSpeed);
-    maxWidth = random(minThick, maxThick);
-    strokeTime = random(minStroke, maxStroke);
+    alp = random(podARL.get(PID).minAlpha, podARL.get(PID).maxAlpha);
+    speed = random(podARL.get(PID).minSpeed, podARL.get(PID).maxSpeed);
+    maxWidth = random(podARL.get(PID).minThick, podARL.get(PID).maxThick);
+    strokeTime = random(podARL.get(PID).minStroke, podARL.get(PID).maxStroke);
     
     duration = strokeTime + 500;
   }
@@ -95,7 +97,7 @@ class Agents {
     isDrawing = false;
     startTime = millis();
     
-    waitTime = random(minWait, maxWait);
+    waitTime = random(podARL.get(PID).minWait, podARL.get(PID).maxWait);
     duration = waitTime + 500;
 
     if(isPause)

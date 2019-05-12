@@ -13,18 +13,12 @@ float offX, offY;
 
 int matrixColumns, matrixRows;
 
-int maxAgents;
+ArrayList<Pod> podARL;
+int podID; // active pod
+
 int dimension;
 
-float minSpeed, maxSpeed;
-float minStroke, maxStroke;
-float minWait, maxWait;
-float minThick, maxThick;
-
-int minAlpha, maxAlpha;
-
 float friction;
-
 float gravForce;
 PVector gravDir;
 
@@ -61,19 +55,6 @@ void setup()
   matrixColumns = 10;
   matrixRows = 5;
 
-  maxAgents = 16;
-  minSpeed = 2;
-  maxSpeed = 16;
-  minThick = 1;
-  maxThick = 32;
-
-  minStroke = 50; 
-  maxStroke = 3000;
-  minWait = 50;
-  maxWait = 3000;
-
-  minAlpha = 1;
-  maxAlpha = 255;
   friction = .01;
 
   gravDir = new PVector();
@@ -86,41 +67,45 @@ void setup()
   strokeWeight(4);
   stroke(fgClr);
 
+  podARL = new ArrayList();
+
   setUpCanvas();
   initFieldMatrix();
   initGUI();
+  
+  addPod();
+}
+
+//  adds a pod
+void addPod()
+{
+  podARL.add(new Pod());
+  podID = podARL.size() - 1;
+  podARL.get(podID).setPodID(podID);
+  podARL.get(podID).initAgents();
+  
+  podARL.get(podID).setGUI();
+  
+  controlP5.addButton("POD " + (podID + 1) )
+  .setBroadcast(false)
+  .setValue(podID)
+  .setPosition(400 + podID * 36, 180)
+  .setSize(32, 32)
+  .onPress(new CallbackListener() { 
+    public void controlEvent(CallbackEvent event) {
+      String name = event.getController().getName();
+      float value = event.getController().getValue();
+      println("got a press from a " + name + ", the value is " + value);
+      podID = int(value);
+      podARL.get(podID).setGUI();
+    }})
+  .setBroadcast(true);
 }
 
 void initFieldMatrix()
 {
   fm = new FieldMatrix(imageWD, imageHT, matrixColumns);
   fm.drawField(fieldBuffer);
-}
-
-void initAgents()
-{
-  drawAgents = new Agents[maxAgents];
-
-  for (int f = 0; f < maxAgents; f++)
-  {
-    drawAgents[f] = new Agents( new PVector(random(canvasWD), random(canvasHT)) );
-  }
-}
-
-void allNewStroke()
-{
-  for (int f = 0; f < maxAgents; f++)
-  {
-    drawAgents[f].newStroke();
-  }
-}
-
-void stopAllStrokes()
-{
-  for (int f = 0; f < maxAgents; f++)
-  {
-    drawAgents[f].isDrawing = false;
-  }
 }
 
 //  Set up the canvas - full print resolution
@@ -253,22 +238,12 @@ void draw() {
   {
     agentBuffer.background(0, 0);
   }
-
-  for (int f = 0; f < drawAgents.length; f++)
+  
+  for(int i = 0; i < podARL.size(); i++)
   {
-    drawAgents[f].goWithTheFlow();
-
-    if (showAgents)
-    {
-      drawAgents[f].drawPos(agentBuffer);
-    } 
-
-    if (drawAgents[f].isDrawing)
-    {
-      drawAgents[f].drawUpdate(drawBuffer);
-    }
+    podARL.get(i).update();
   }
-    
+  
   agentBuffer.endDraw();
   drawBuffer.endDraw();
     

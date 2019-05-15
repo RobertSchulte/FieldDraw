@@ -1,8 +1,15 @@
+Slider cpTotalAgents;
+Range cpSpeed;
+Range cpThickness;
+Range cpAlphaRange;
+Range cpStrokeLength;
+Range cpGapLength;
+
 void initGUI()
 {
   int btW = 120, btH = 16;
   int col = 20;
-
+  //  document settings
   controlP5.addSlider("printWidth")
     .setRange(0.5, 20)
     .setValue(printWidth)
@@ -29,7 +36,8 @@ void initGUI()
     .setValue(dpi)
     .setPosition(col, 60)
     .setSize(btW, btH);
-
+    
+  //  Field settings
   controlP5.addSlider("matrixColumns")
     .setRange(4, 32)
     .setValue(matrixColumns)
@@ -75,54 +83,69 @@ void initGUI()
     .setRange(0.1, 2)
     .setValue(.5)
     .setPosition(col, 100)
+    .setSize(btW, btH);
+    
+  controlP5.addSlider("Smooth threshold")
+    .setRange(1, 5)
+    .setValue(3)
+    .setPosition(col, 120)
     .setSize(btW, btH); 
 
   col = 400;
-
-  controlP5.addSlider("maxAgents")
-    .setRange(1, 512)
-    .setValue(maxAgents)
+  
+  //  Agent settings
+  cpTotalAgents = controlP5.addSlider("Total Agents")
+    .setBroadcast(false)
+    .setRange(1, 64)
     .setPosition(col, 20)
-    .setSize(btW, btH);
+    .setSize(btW, btH)
+    .setBroadcast(true);
 
   controlP5.addButton("INIT AGENTS")
-    .setValue(1)
-    .setPosition(col, 40)
-    .setSize(btW, btH);
-
-  controlP5.addRange("Speed")
-    .setRange(minSpeed, maxSpeed)
-    .setRangeValues(minSpeed, maxSpeed)
-    .setPosition(col, 60)
-    .setSize(btW, btH);
-
-  controlP5.addRange("Thickness")
-    .setRange(minThick, maxThick)
-    .setRangeValues(minThick, maxThick)
-    .setPosition(col, 80)
-    .setSize(btW, btH);
-
-  controlP5.addRange("AlphaRange")
     .setBroadcast(false)
-    .setRange(minAlpha, maxAlpha)
-    .setRangeValues(minAlpha, maxAlpha)
+    .setPosition(col, 40)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+
+  cpSpeed = controlP5.addRange("Speed")
+    .setBroadcast(false)
+    .setRange(2, 16)
+    .setPosition(col, 60)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+
+  cpThickness = controlP5.addRange("Thickness")
+    .setBroadcast(false)
+    .setRange(1, 32)
+    .setPosition(col, 80)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+
+  cpAlphaRange = controlP5.addRange("AlphaRange")
+    .setBroadcast(false)
+    .setRange(1, 256)
+    .setRangeValues(1, 256)
     .setPosition(col, 100)
     .setSize(btW, btH)
     .setBroadcast(true);
 
-  controlP5.addRange("StrokeLength")
+  cpStrokeLength = controlP5.addRange("StrokeLength")
     .setBroadcast(false)
-    .setRange(minStroke, maxStroke)
-    .setRangeValues(minStroke, maxStroke)
+    .setRange(50, 3000)
     .setPosition(col, 120)
     .setSize(btW, btH)
     .setBroadcast(true);
 
-  controlP5.addRange("GapLength")
+  cpGapLength = controlP5.addRange("GapLength")
     .setBroadcast(false)
-    .setRange(minWait, maxWait)
-    .setRangeValues(minWait, maxWait)
+    .setRange(50, 3000)
     .setPosition(col, 140)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+    
+  controlP5.addButton("ADD POD")
+    .setBroadcast(false)
+    .setPosition(col, 160)
     .setSize(btW, btH)
     .setBroadcast(true);
 
@@ -149,10 +172,18 @@ void initGUI()
     .setSize(btW / 2, btH * 2);
 }
 
+
+
 void controlEvent(ControlEvent event) 
 {
   if (event.isController()) 
   {
+    
+    if (event.getController().getName()=="ADD POD")
+    {
+      addPod();
+    }
+    
     if (event.getController().getName()=="Save")
     {
       saveImage();
@@ -160,16 +191,11 @@ void controlEvent(ControlEvent event)
 
     if (event.getController().getName()=="CLEAR") 
     {
-      stopAllStrokes();
+      podARL.get(podID).stopAllStrokes();
       
       drawBuffer.beginDraw();
       drawBuffer.background(bgClr);
       drawBuffer.endDraw();
-      
-      //if(!showAgents)
-      //{
-        //allNewStroke();
-     // }
     }
 
     if (event.getController().getName()=="Pause") 
@@ -179,7 +205,7 @@ void controlEvent(ControlEvent event)
       if (!isPause)
       {
         event.getController().setLabel("Pause");
-        allNewStroke();
+        podARL.get(podID).allNewStroke();
       }
       else
       {
@@ -192,35 +218,40 @@ void controlEvent(ControlEvent event)
       float angle = event.getValue();
       gravDir = PVector.fromAngle(angle);
     }
+    
+    if (event.isFrom("Total Agents"))
+    {
+      podARL.get(podID).maxAgents = int(event.getValue());
+    }
 
     if (event.isFrom("Speed"))
     {
-      minSpeed = int(event.getController().getArrayValue(0));
-      maxSpeed = int(event.getController().getArrayValue(1));
+       podARL.get(podID).minSpeed = int(event.getController().getArrayValue(0));
+       podARL.get(podID).maxSpeed = int(event.getController().getArrayValue(1));
     }
 
     if (event.isFrom("Thickness"))
     {
-      minThick = int(event.getController().getArrayValue(0));
-      maxThick = int(event.getController().getArrayValue(1));
+       podARL.get(podID).minThick = int(event.getController().getArrayValue(0));
+       podARL.get(podID).maxThick = int(event.getController().getArrayValue(1));
     }
 
     if (event.isFrom("AlphaRange"))
     {
-      minAlpha = int(event.getController().getArrayValue(0));
-      maxAlpha = int(event.getController().getArrayValue(1));
+       podARL.get(podID).minAlpha = int(event.getController().getArrayValue(0));
+       podARL.get(podID).maxAlpha = int(event.getController().getArrayValue(1));
     }
 
     if (event.isFrom("StrokeLength"))
     {
-      minStroke = int(event.getController().getArrayValue(0));
-      maxStroke = int(event.getController().getArrayValue(1));
+       podARL.get(podID).minStroke = int(event.getController().getArrayValue(0));
+       podARL.get(podID).maxStroke = int(event.getController().getArrayValue(1));
     }
 
     if (event.isFrom("GapLength"))
     {
-      minWait = int(event.getController().getArrayValue(0));
-      maxWait = int(event.getController().getArrayValue(1));
+       podARL.get(podID).minWait = int(event.getController().getArrayValue(0));
+       podARL.get(podID).maxWait = int(event.getController().getArrayValue(1));
     }
 
     if (event.getController().getName()=="UPDATE") 
@@ -242,11 +273,16 @@ void controlEvent(ControlEvent event)
       fm.makeSmoothField();
       fm.drawField(fieldBuffer);
     }
+    
+    if (event.getController().getName()=="Smooth threshold") 
+    {
+      fm.thres = int(event.getValue());
+    }
+    
 
     if (event.getController().getName()=="INIT AGENTS") 
     {
-      initAgents();
-      //fm.drawField(fieldBuffer);
+      podARL.get(podID).initAgents();
     }
 
     if (event.getController().getName()=="SHOW AGENTS") 
@@ -270,7 +306,7 @@ void controlEvent(ControlEvent event)
       bgClr = fgClr;
       fgClr = tempClr;
 
-      allNewStroke();
+      podARL.get(podID).allNewStroke();
     }
   }
 }

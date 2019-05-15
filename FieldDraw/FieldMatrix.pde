@@ -4,6 +4,7 @@ class FieldMatrix {
   PGraphics fieldBuffer;
   int wd, ht, blockSize;
   boolean visible;
+  float thres = 3;
   
   FieldMatrix(int _wd, int _ht, int _col) 
   {
@@ -37,8 +38,6 @@ class FieldMatrix {
   
   void makeSmoothField()
   {
-    float thres = 3;
-  
     PVector [][] tempField;
   
     tempField = new PVector[col][row];

@@ -11,6 +11,9 @@ class Pod {
   float minThick, maxThick;
   
   int minAlpha, maxAlpha;
+  
+  int hue, sat, brt, alp;
+  
   int PID;
   
   Pod()
@@ -47,6 +50,9 @@ class Pod {
     cpAlphaRange.setRangeValues(minAlpha, maxAlpha);
     cpStrokeLength.setRangeValues(minStroke, maxStroke);
     cpGapLength.setRangeValues(minWait, maxWait);
+    cpHue.setValue(hue);
+    cpSat.setValue(sat);
+    cpBrt.setValue(brt);
   }
   
   

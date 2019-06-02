@@ -1,4 +1,5 @@
 Slider cpTotalAgents;
+Slider cpHue, cpSat, cpBrt;
 Range cpSpeed;
 Range cpThickness;
 Range cpAlphaRange;
@@ -8,7 +9,8 @@ Range cpGapLength;
 void initGUI()
 {
   int btW = 120, btH = 16;
-  int col = 20;
+  int col = 20, row = 0;
+  
   //  document settings
   controlP5.addSlider("printWidth")
     .setRange(0.5, 20)
@@ -91,61 +93,88 @@ void initGUI()
     .setPosition(col, 120)
     .setSize(btW, btH); 
 
-  col = 400;
   
   //  Agent settings
+  
+  col = 10;
+  row = 300;
+  
+  controlP5.addButton("INIT AGENTS")
+    .setBroadcast(false)
+    .setPosition(col, row)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+    
   cpTotalAgents = controlP5.addSlider("Total Agents")
     .setBroadcast(false)
     .setRange(1, 64)
-    .setPosition(col, 20)
-    .setSize(btW, btH)
-    .setBroadcast(true);
-
-  controlP5.addButton("INIT AGENTS")
-    .setBroadcast(false)
-    .setPosition(col, 40)
+    .setPosition(col, row + 20)
     .setSize(btW, btH)
     .setBroadcast(true);
 
   cpSpeed = controlP5.addRange("Speed")
     .setBroadcast(false)
     .setRange(2, 16)
-    .setPosition(col, 60)
+    .setPosition(col, row + 40)
     .setSize(btW, btH)
     .setBroadcast(true);
 
   cpThickness = controlP5.addRange("Thickness")
     .setBroadcast(false)
     .setRange(1, 32)
-    .setPosition(col, 80)
+    .setPosition(col, row + 60)
     .setSize(btW, btH)
     .setBroadcast(true);
-
-  cpAlphaRange = controlP5.addRange("AlphaRange")
-    .setBroadcast(false)
-    .setRange(1, 256)
-    .setRangeValues(1, 256)
-    .setPosition(col, 100)
-    .setSize(btW, btH)
-    .setBroadcast(true);
-
+    
   cpStrokeLength = controlP5.addRange("StrokeLength")
     .setBroadcast(false)
     .setRange(50, 3000)
-    .setPosition(col, 120)
+    .setPosition(col, row + 80)
     .setSize(btW, btH)
     .setBroadcast(true);
 
   cpGapLength = controlP5.addRange("GapLength")
     .setBroadcast(false)
     .setRange(50, 3000)
-    .setPosition(col, 140)
+    .setPosition(col, row + 100)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+    
+  cpHue = controlP5.addSlider("Hue")
+    .setBroadcast(false)
+    .setRange(0, 100)
+    .setValue(255)
+    .setPosition(col, row + 120)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+    
+  cpSat = controlP5.addSlider("Saturation")
+    .setBroadcast(false)
+    .setRange(0, 100)
+    .setValue(255)
+    .setPosition(col, row + 140)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+    
+  cpBrt = controlP5.addSlider("Brightness")
+    .setBroadcast(false)
+    .setRange(0, 100)
+    .setValue(255)
+    .setPosition(col, row + 160)
+    .setSize(btW, btH)
+    .setBroadcast(true);
+    
+  cpAlphaRange = controlP5.addRange("AlphaRange")
+    .setBroadcast(false)
+    .setRange(1, 256)
+    .setRangeValues(1, 256)
+    .setPosition(col, row + 180)
     .setSize(btW, btH)
     .setBroadcast(true);
     
   controlP5.addButton("ADD POD")
     .setBroadcast(false)
-    .setPosition(col, 160)
+    .setPosition(col, row + 200)
     .setSize(btW, btH)
     .setBroadcast(true);
 
@@ -252,6 +281,21 @@ void controlEvent(ControlEvent event)
     {
        podARL.get(podID).minWait = int(event.getController().getArrayValue(0));
        podARL.get(podID).maxWait = int(event.getController().getArrayValue(1));
+    }
+    
+    if (event.isFrom("Hue"))
+    {
+       podARL.get(podID).hue = int(event.getValue());
+    }
+    
+    if (event.isFrom("Saturation"))
+    {
+       podARL.get(podID).sat = int(event.getValue());
+    }
+    
+    if (event.isFrom("Brightness"))
+    {
+       podARL.get(podID).brt = int(event.getValue());
     }
 
     if (event.getController().getName()=="UPDATE") 

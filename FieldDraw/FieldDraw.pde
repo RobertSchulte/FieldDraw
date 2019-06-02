@@ -49,8 +49,8 @@ void setup()
   printHeight = 8.5;
   dpi = 100;
 
-  bgClr = 0;
-  fgClr = 255;
+  bgClr = 255;
+  fgClr = 0;
 
   matrixColumns = 10;
   matrixRows = 5;
@@ -89,8 +89,8 @@ void addPod()
   controlP5.addButton("POD " + (podID + 1) )
   .setBroadcast(false)
   .setValue(podID)
-  .setPosition(400 + podID * 36, 180)
-  .setSize(32, 32)
+  .setPosition(400, 200 + podID *20)
+  .setSize(120, 16)
   .onPress(new CallbackListener() { 
     public void controlEvent(CallbackEvent event) {
       String name = event.getController().getName();
@@ -148,6 +148,7 @@ void setUpCanvas()
   screenBuffer = createGraphics(imageWD, imageHT);
   agentBuffer = createGraphics(imageWD, imageHT);
 
+  screenBuffer.colorMode(HSB, 100);
   screenBuffer.beginDraw();
   screenBuffer.background(bgClr);
   screenBuffer.endDraw();

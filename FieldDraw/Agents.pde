@@ -7,7 +7,7 @@ class Agents {
   PVector lastdir;
   float speed;
   float thickness, lastThickness, maxWidth, strokeTime, waitTime;
-  float alp;
+  float hue, sat, brt,alp;
   float startTime, duration;
   boolean isDrawing = false; 
   PVector grav;
@@ -82,6 +82,10 @@ class Agents {
     vertLst1.clear();
     vertLst2.clear();
     
+    hue = podARL.get(PID).hue;
+    sat = podARL.get(PID).sat;
+    brt = podARL.get(PID).brt;
+    
     alp = random(podARL.get(PID).minAlpha, podARL.get(PID).maxAlpha);
     speed = random(podARL.get(PID).minSpeed, podARL.get(PID).maxSpeed);
     maxWidth = random(podARL.get(PID).minThick, podARL.get(PID).maxThick);
@@ -133,7 +137,7 @@ class Agents {
     }
     else
     {
-      db.fill(255);
+      db.fill(fgClr);
       db.ellipse(pos.x * scale , pos.y * scale, 4, 4);
     }
   }
@@ -202,8 +206,9 @@ class Agents {
     {
       return;
     }
-
-    drawBuffer.fill(fgClr, alp);
+    
+    drawBuffer.colorMode(HSB, 100);
+    drawBuffer.fill(hue, sat, brt, alp);
     drawBuffer.noStroke();
     
     drawBuffer.beginShape();
